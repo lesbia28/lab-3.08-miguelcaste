@@ -7,40 +7,29 @@ import java.util.List;
 
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
 public class Guest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
+
     private String name;
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @ManyToMany
-    @JoinTable(
-            name="guest_events",
-            joinColumns = {@JoinColumn (name="guest_id")},
-            inverseJoinColumns = {@JoinColumn(name="event_id")})
-    private List<Event> events;
-
     public Guest() {
     }
 
-    public Guest(String name, Status status, List<Event> events) {
+    public Guest(String name, Status status) {
         this.name = name;
         this.status = status;
-        this.events = events;
-    }
-
-    public Guest(String name, Status status) {
     }
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getName() {
@@ -59,11 +48,12 @@ public class Guest {
         this.status = status;
     }
 
-    public List<Event> getEvents() {
-        return events;
-    }
-
-    public void setEvents(List<Event> events) {
-        this.events = events;
+    @Override
+    public String toString() {
+        return "Guest{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", status=" + status +
+                '}';
     }
 }

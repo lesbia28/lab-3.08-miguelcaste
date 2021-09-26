@@ -2,10 +2,12 @@ package com.ironhack.lab3.e2.model;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Inheritance (strategy = InheritanceType.JOINED)
+@Inheritance (strategy = InheritanceType.SINGLE_TABLE)
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,8 +17,11 @@ public class Event {
     private String location;
     private String title;
 
-    @ManyToMany (mappedBy = "events")
-    private List<Guest> guests;
+    @ManyToMany
+    @JoinTable(name = "events_guests",
+            joinColumns = {@JoinColumn(name = "event_id")},
+            inverseJoinColumns = {@JoinColumn(name = "guest_id")})
+    private Set<Guest> list = new HashSet<Guest>();
 
 
     public Event() {
@@ -27,6 +32,14 @@ public class Event {
         this.duration = duration;
         this.location = location;
         this.title = title;
+    }
+
+    public Event(Date date, int duration, String location, String title, Set<Guest> list) {
+        this.date = date;
+        this.duration = duration;
+        this.location = location;
+        this.title = title;
+        this.list = list;
     }
 
     public Long getId() {
@@ -69,11 +82,16 @@ public class Event {
         this.title = title;
     }
 
-    public List<Guest> getGuests() {
-        return guests;
+    public Set<Guest> getList() {
+        return list;
     }
 
-    public void setGuests(List<Guest> guests) {
-        this.guests = guests;
+    public void setList(Set<Guest> list) {
+        this.list = list;
     }
+
+    public void addGuest(Guest guest){
+        this.list.add(guest);
+    }
+
 }
